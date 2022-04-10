@@ -1,7 +1,7 @@
 package ba.etf.rma22.projekat
 
 
-import android.R.attr.button
+
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -11,10 +11,15 @@ import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import ba.etf.rma22.projekat.data.models.Anketa
+import ba.etf.rma22.projekat.data.repositories.AnketaRepository
 import ba.etf.rma22.projekat.view.AnketaListAdapter
 import ba.etf.rma22.projekat.viewmodel.AnketaListViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.*
+import kotlin.collections.ArrayList
+
+
 
 
 class MainActivity : AppCompatActivity() {
@@ -24,6 +29,14 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var spinner : Spinner
     private lateinit var upisDugme : FloatingActionButton
+
+    companion object {
+        private var mojeAnkete=ArrayList<Anketa>(AnketaRepository.getMyAnkete())
+        private fun dodajUMojeAnkete(anketa: Anketa){
+            mojeAnkete.add(anketa)
+        }
+
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,6 +51,24 @@ class MainActivity : AppCompatActivity() {
         anketaListAdapter= AnketaListAdapter(listOf())
         ankete.adapter=anketaListAdapter
         anketaListAdapter.updateAnkete(anketeListViewModel.getAll())
+
+
+
+        //dodatno
+        val incomingMessages : Bundle? = getIntent().getExtras()
+        if(incomingMessages!=null){
+            val istrazivanje : String? = incomingMessages.getString("istrazivanje")
+            val grupa : String? = incomingMessages.getString("grupa")
+            val sveAnkete = AnketaRepository.getAll()
+            for (anketa in sveAnkete) {
+                if (anketa.nazivIstrazivanja.equals(istrazivanje) && anketa.nazivGrupe.equals(grupa)) {
+                    dodajUMojeAnkete(anketa)
+                }
+            }
+
+        }
+
+
 
         spinner=findViewById(R.id.filterAnketa)
         val opcije = ArrayList<String>()
@@ -57,7 +88,7 @@ class MainActivity : AppCompatActivity() {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 val odabranaOpcija = parent.getItemAtPosition(position).toString()
                 if(odabranaOpcija.equals("Sve moje ankete")){
-                    anketaListAdapter.updateAnkete(anketeListViewModel.getMyAnkete())
+                    anketaListAdapter.updateAnkete(mojeAnkete)
                     anketaListAdapter.notifyDataSetChanged()
                 }
                 else if(odabranaOpcija.equals("Sve ankete")){
@@ -86,14 +117,8 @@ class MainActivity : AppCompatActivity() {
         upisDugme = findViewById(R.id.upisDugme)
         upisDugme.setOnClickListener {
             val intent = Intent(this,UpisIstrazivanje::class.java)
-            startActivity(intent)
+            startActivity(intent,)
         }
-
-
-
-
-
-
 
 
     }

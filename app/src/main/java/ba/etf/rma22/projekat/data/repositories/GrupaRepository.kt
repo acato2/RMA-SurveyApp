@@ -1,7 +1,6 @@
 package ba.etf.rma22.projekat.data.repositories
 
-import ba.etf.rma22.projekat.data.allGroups
-import ba.etf.rma22.projekat.data.models.Anketa
+import ba.etf.rma22.projekat.data.models.allGroups
 import ba.etf.rma22.projekat.data.models.Grupa
 
 object GrupaRepository {
@@ -12,7 +11,6 @@ object GrupaRepository {
                grupe.add(grupa)
            }
        }
-
         return grupe
    }
 

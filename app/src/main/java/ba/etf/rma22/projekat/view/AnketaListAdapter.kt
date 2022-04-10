@@ -11,6 +11,7 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import ba.etf.rma22.projekat.R
 import ba.etf.rma22.projekat.data.models.Anketa
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -37,6 +38,7 @@ class AnketaListAdapter (private var ankete : List<Anketa>):
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: AnketaViewHolder, position: Int) {
         holder.nazivAnkete.text = ankete[position].naziv
+
         //status ankete
         var datumRada = ankete[position].datumRada
         val datumKraja = ankete[position].datumKraj
@@ -100,9 +102,28 @@ class AnketaListAdapter (private var ankete : List<Anketa>):
     override fun getItemCount(): Int = ankete.size
 
     fun updateAnkete(ankete : List<Anketa>){
+        Collections.sort(ankete, SortByDate())
         this.ankete=ankete
         notifyDataSetChanged()
 
     }
+    private class SortByDate : Comparator<Anketa> {
+        override fun compare(
+            anketa1: Anketa,
+            anketa2: Anketa
+        ): Int {
+            val d1: Date = anketa1.datumPocetak
+            val d2: Date = anketa2.datumPocetak
+            if(d1.compareTo(d2) > 0) {
+                return 1
+            } else if(d1.compareTo(d2) < 0) {
+                return -1
+            }
+            return 0
+
+    }
+    }
+
+    
 
 }

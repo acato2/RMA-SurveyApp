@@ -26,7 +26,7 @@
 
         <Spinner
             android:id="@+id/odabirGodina"
-            android:layout_width="196dp"
+            android:layout_width="320dp"
             android:layout_height="37dp"
             android:layout_margin="10dp"
             tools:ignore="SpeakableTextPresentCheck" />
@@ -41,7 +41,7 @@
 
         <Spinner
             android:id="@+id/odabirIstrazivanja"
-            android:layout_width="196dp"
+            android:layout_width="320dp"
             android:layout_height="37dp"
             android:layout_margin="10dp" />
 
@@ -55,7 +55,7 @@
 
         <Spinner
             android:id="@+id/odabirGrupa"
-            android:layout_width="196dp"
+            android:layout_width="320dp"
             android:layout_height="37dp"
             android:layout_margin="10dp" />
 
