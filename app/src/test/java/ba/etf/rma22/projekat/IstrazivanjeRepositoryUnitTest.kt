@@ -1,6 +1,8 @@
 package ba.etf.rma22.projekat
 
 import ba.etf.rma22.projekat.data.models.Anketa
+import ba.etf.rma22.projekat.data.models.Istrazivanje
+import ba.etf.rma22.projekat.data.models.MojaIstrazivanja
 import org.junit.Test
 import ba.etf.rma22.projekat.data.repositories.IstrazivanjeRepository
 import junit.framework.Assert.assertEquals
@@ -30,9 +32,13 @@ class IstrazivanjeRepositoryUnitTest {
     @Test
     fun testGetUpisani(){
         val istrazivanja = IstrazivanjeRepository.getUpisani()
+        assertEquals(istrazivanja.size,1)
+        assertThat(istrazivanja,hasItem<Anketa>(hasProperty("naziv", Is("Kvalitet nastavnih aktivnosti"))))
+        //
+        val istrazivanje = Istrazivanje("Zadovoljstvo studenata školovanjem",4)
+        MojaIstrazivanja.dodajUMojaIstrazivanja(istrazivanje)
         assertEquals(istrazivanja.size,2)
-        assertThat(istrazivanja,hasItem<Anketa>(hasProperty("naziv", Is("Kvalitet online nastave"))))
-        assertThat(istrazivanja,hasItem<Anketa>(hasProperty("naziv", Is("Kvalitet offline nastave"))))
+        assertThat(istrazivanja,hasItem<Anketa>(hasProperty("naziv", Is("Zadovoljstvo studenata školovanjem"))))
         assertThat(istrazivanja,not(hasItem<Anketa>(hasProperty("naziv",Is("Kvalitet nastave na predmetu DM")))))
     }
 }

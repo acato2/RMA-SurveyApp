@@ -1,4 +1,6 @@
-package ba.etf.rma22.projekat.data.models
+package ba.etf.rma22.projekat.data
+
+import ba.etf.rma22.projekat.data.models.Istrazivanje
 
 
 fun allIstrazivanja (): List<Istrazivanje> {
@@ -24,10 +26,8 @@ fun allIstrazivanja (): List<Istrazivanje> {
             Istrazivanje("Zadovoljstvo studenata školovanjem",5),
         )
 }
-fun upisanaIstrazivanja (): List<Istrazivanje> {
+fun upisanaIstrazivanja () : List<Istrazivanje>{
         return listOf(
-                Istrazivanje("Kvalitet online nastave",1),
-                Istrazivanje("Kvalitet offline nastave",1),
-
+                Istrazivanje("Kvalitet nastavnih aktivnosti",1)
         )
 }

@@ -8,12 +8,10 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
-import ba.etf.rma22.projekat.data.models.Anketa
-import ba.etf.rma22.projekat.data.repositories.AnketaRepository
-import ba.etf.rma22.projekat.data.repositories.GrupaRepository
-import ba.etf.rma22.projekat.data.repositories.IstrazivanjeRepository
-
-
+import ba.etf.rma22.projekat.data.models.Istrazivanje
+import ba.etf.rma22.projekat.data.models.MojaIstrazivanja
+import ba.etf.rma22.projekat.viewmodel.GrupaViewModel
+import ba.etf.rma22.projekat.viewmodel.IstrazivanjeViewModel
 
 
 class UpisIstrazivanje : AppCompatActivity() {
@@ -22,14 +20,9 @@ class UpisIstrazivanje : AppCompatActivity() {
     private lateinit var odabirGrupa : Spinner
     private lateinit var arrayAdapter2 :ArrayAdapter<String>
     private lateinit var dodajIstrazivanjeDugme : Button
+    private var istrazivanjeViewModel = IstrazivanjeViewModel()
+    private var grupaViewModel = GrupaViewModel()
 
-    companion object {
-        private val upisanaIstrazivanja = ArrayList<String>()
-        private fun dodajUMojaIstrazivanja(nazivIstrazivanja : String){
-            upisanaIstrazivanja.add(nazivIstrazivanja)
-        }
-
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,11 +64,11 @@ class UpisIstrazivanje : AppCompatActivity() {
                 val odabranaGodina: String = odabirGodina.getSelectedItem().toString()
                 if (odabranaGodina != " ") {
                     val istrazivanja =
-                        IstrazivanjeRepository.getIstrazivanjeByGodina(odabranaGodina.toInt())
+                        istrazivanjeViewModel.getIstrazivanjeByGodina(odabranaGodina.toInt())
                     val opcije2 = ArrayList<String>()
                     opcije2.add(" ")
                     for (istrazivanje in istrazivanja) {
-                        if(!upisanaIstrazivanja.contains(istrazivanje.naziv)){
+                        if(!istrazivanjeViewModel.getUpisani().contains(istrazivanje)){
                         opcije2.add(istrazivanje.naziv)}
                     }
                     arrayAdapter2 = ArrayAdapter(
@@ -131,7 +124,7 @@ class UpisIstrazivanje : AppCompatActivity() {
             ) {
                 val odabranoIstrazivanje: String = odabirIstrazivanja.getSelectedItem().toString()
                 if (odabranoIstrazivanje != " ") {
-                    val grupe = GrupaRepository.getGroupsByIstrazivanje(odabranoIstrazivanje)
+                    val grupe = grupaViewModel.getGroupsByIstrazivanje(odabranoIstrazivanje)
                     val opcije3 = ArrayList<String>()
                     opcije3.add(" ")
                     for (grupa in grupe) {
@@ -194,44 +187,13 @@ class UpisIstrazivanje : AppCompatActivity() {
        dodajIstrazivanjeDugme.setOnClickListener{
             val nazivIstrazivanja : String = odabirIstrazivanja.getSelectedItem().toString()
             val nazivGrupe : String = odabirGrupa.getSelectedItem().toString()
+            val godinaIstrazivanja : String = odabirGodina.getSelectedItem().toString()
             val intentPovratak = Intent(this,MainActivity::class.java)
+            intentPovratak .putExtra("godina",godinaIstrazivanja)
             intentPovratak .putExtra("istrazivanje",nazivIstrazivanja)
             intentPovratak.putExtra("grupa",nazivGrupe)
-           val sveAnkete = AnketaRepository.getAll()
-           for (anketa in sveAnkete) {
-               if (anketa.nazivIstrazivanja.equals(nazivIstrazivanja) && anketa.nazivGrupe.equals(
-                       nazivGrupe
-                   )
-               ) {
-                  dodajUMojaIstrazivanja(nazivIstrazivanja)
-               }
-           }
+            MojaIstrazivanja.dodajUMojaIstrazivanja(Istrazivanje(nazivIstrazivanja,godinaIstrazivanja.toInt()))
             startActivity(intentPovratak)
         }
-
-
-
-
-
     }
-
-        /*private fun upisiKorisnikaNaAnketu() {
-            val nazivIstrazivanja: String = odabirIstrazivanja.getSelectedItem().toString()
-            val nazivGrupe: String = odabirGrupa.getSelectedItem().toString()
-            val sveAnkete = AnketaRepository.getAll()
-            for (anketa in sveAnkete) {
-                if (anketa.nazivIstrazivanja.equals(nazivIstrazivanja) && anketa.nazivGrupe.equals(
-                        nazivGrupe
-                    )
-                ) {
-                    val k: Korisnik = Korisnik()
-                    k.dodajAnketu(anketa)
-                }
-            }
-
-    }*/
-
-
-
-
 }

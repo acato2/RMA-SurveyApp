@@ -11,7 +11,6 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import ba.etf.rma22.projekat.R
 import ba.etf.rma22.projekat.data.models.Anketa
-import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -31,10 +30,6 @@ class AnketaListAdapter (private var ankete : List<Anketa>):
         return AnketaViewHolder(view)
     }
 
-
-
-
-
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: AnketaViewHolder, position: Int) {
         holder.nazivAnkete.text = ankete[position].naziv
@@ -46,7 +41,7 @@ class AnketaListAdapter (private var ankete : List<Anketa>):
 
         val calender = Calendar.getInstance()
 
-        val year = calender.get(Calendar.YEAR)-1900
+        val year = calender.get(Calendar.YEAR)-1900  // jer koristimo date klasu moramo godinu oduzet od 1900
         val month = calender.get(Calendar.MONTH)
         val day = calender.get(Calendar.DAY_OF_MONTH)
         val currentDate : Date = Date(year,month,day)
@@ -102,7 +97,7 @@ class AnketaListAdapter (private var ankete : List<Anketa>):
     override fun getItemCount(): Int = ankete.size
 
     fun updateAnkete(ankete : List<Anketa>){
-        Collections.sort(ankete, SortByDate())
+        Collections.sort(ankete, SortByDate())  //sortiramo po datumu pocetka
         this.ankete=ankete
         notifyDataSetChanged()
 
