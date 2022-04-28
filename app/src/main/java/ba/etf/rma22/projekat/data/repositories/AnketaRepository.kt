@@ -1,8 +1,8 @@
 package ba.etf.rma22.projekat.data.repositories
 
 import ba.etf.rma22.projekat.data.allAnkete
-import ba.etf.rma22.projekat.data.doneAnkete
 import ba.etf.rma22.projekat.data.models.*
+import ba.etf.rma22.projekat.data.models.MojaIstrazivanja
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -14,10 +14,10 @@ object AnketaRepository {
         return MojeAnkete.mojeAnkete
     }
     fun getAll() : List<Anketa>{
-        return allAnkete()
+        return UradjeneAnkete.sveAnkete
     }
     fun getDone() :List<Anketa>{
-        return doneAnkete()
+        return UradjeneAnkete.uradjeneAnkete
     }
 
     //buduce ankete te grupe

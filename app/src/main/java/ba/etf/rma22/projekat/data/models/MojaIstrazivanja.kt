@@ -8,5 +8,6 @@ class MojaIstrazivanja {
         fun dodajUMojaIstrazivanja(istrazivanje : Istrazivanje){
             upisanaIstrazivanja.add(istrazivanje)
         }
+
     }
 }

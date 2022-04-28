@@ -18,6 +18,10 @@ fun myAnkete() : List<Anketa>{
 //sve ankete
 fun allAnkete() : List<Anketa>{
     return listOf(
+        Anketa(
+            "Nastavne aktivnosti","Kvalitet nastavnih aktivnosti", Date(119,5,5), Date(122,6,6),
+            null,20,"Grupa Nastava", 0F
+        ),
         //uradjene
         Anketa(
             "Online režim","Kvalitet online nastave", Date(115,2,2), Date(122,11,11),
@@ -173,11 +177,11 @@ fun allAnkete() : List<Anketa>{
             null,20,"Grupa Računar", 0F
         ),
         Anketa(
-            "Mobilne komunikacije","Kvalitet nastave na predmetu MK", Date(120,11,2), Date(123,9,9),
+            "Mobilne komunikacije I","Kvalitet nastave na predmetu MK", Date(120,11,2), Date(123,9,9),
             null,20,"Grupa Grafika", 0F
         ),
         Anketa(
-            "Mobilne komunikacije","Kvalitet nastave na predmetu MK", Date(120,11,2), Date(122,6,9),
+            "Mobilne komunikacije II","Kvalitet nastave na predmetu MK", Date(120,11,2), Date(122,6,9),
             null,20,"Grupa Računar", 0F
         ),
 

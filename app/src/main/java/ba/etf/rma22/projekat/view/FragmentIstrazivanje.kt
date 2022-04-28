@@ -1,38 +1,51 @@
-package ba.etf.rma22.projekat
+package ba.etf.rma22.projekat.view
 
-import android.content.Intent
+
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import ba.etf.rma22.projekat.MainActivity
+import ba.etf.rma22.projekat.R
 import ba.etf.rma22.projekat.data.models.Istrazivanje
 import ba.etf.rma22.projekat.data.models.MojaIstrazivanja
 import ba.etf.rma22.projekat.viewmodel.GrupaViewModel
 import ba.etf.rma22.projekat.viewmodel.IstrazivanjeViewModel
 
 
-class UpisIstrazivanje : AppCompatActivity() {
+class FragmentIstrazivanje : Fragment(){
     private lateinit var odabirGodina: Spinner
     private lateinit var odabirIstrazivanja : Spinner
     private lateinit var odabirGrupa : Spinner
-    private lateinit var arrayAdapter2 :ArrayAdapter<String>
+    private lateinit var arrayAdapter2 : ArrayAdapter<String>
     private lateinit var dodajIstrazivanjeDugme : Button
     private var istrazivanjeViewModel = IstrazivanjeViewModel()
     private var grupaViewModel = GrupaViewModel()
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_upis_istrazivanje)
-        odabirGodina = findViewById(R.id.odabirGodina)
-        odabirIstrazivanja = findViewById(R.id.odabirIstrazivanja)
-        odabirGrupa = findViewById(R.id.odabirGrupa)
-        dodajIstrazivanjeDugme = findViewById(R.id.dodajIstrazivanjeDugme)
+
+
+
+    @SuppressLint("ResourceType")
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view =  inflater.inflate(R.layout.fragment_istrazivanje, container, false)
+        odabirGodina = view.findViewById(R.id.odabirGodina)
+        odabirIstrazivanja = view.findViewById(R.id.odabirIstrazivanja)
+        odabirGrupa = view.findViewById(R.id.odabirGrupa)
+        dodajIstrazivanjeDugme = view.findViewById(R.id.dodajIstrazivanjeDugme)
 
         //prvi spinner
+
+        dodajIstrazivanjeDugme.setEnabled(false)
 
         val opcije = ArrayList<String>()
         opcije.add(" ")
@@ -44,7 +57,7 @@ class UpisIstrazivanje : AppCompatActivity() {
 
 
         val arrayAdapter: ArrayAdapter<String> =
-            ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, opcije)
+            ArrayAdapter<String>(view.context, android.R.layout.simple_spinner_item, opcije)
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         odabirGodina.adapter = arrayAdapter
         odabirGodina.setSelection(0)
@@ -69,10 +82,10 @@ class UpisIstrazivanje : AppCompatActivity() {
                     opcije2.add(" ")
                     for (istrazivanje in istrazivanja) {
                         if(!istrazivanjeViewModel.getUpisani().contains(istrazivanje)){
-                        opcije2.add(istrazivanje.naziv)}
+                            opcije2.add(istrazivanje.naziv)}
                     }
                     arrayAdapter2 = ArrayAdapter(
-                        getApplicationContext(),
+                        view.context,
                         android.R.layout.simple_spinner_dropdown_item,
                         opcije2
                     )
@@ -83,7 +96,7 @@ class UpisIstrazivanje : AppCompatActivity() {
                 } else {
                     val opcije2 = ArrayList<String>()
                     arrayAdapter2 = ArrayAdapter(
-                        getApplicationContext(),
+                        view.context,
                         android.R.layout.simple_spinner_dropdown_item,
                         opcije2
                     )
@@ -92,7 +105,7 @@ class UpisIstrazivanje : AppCompatActivity() {
 
                     val opcije3 = ArrayList<String>()
                     arrayAdapter2 = ArrayAdapter(
-                        getApplicationContext(),
+                        view.context,
                         android.R.layout.simple_spinner_dropdown_item,
                         opcije3
                     )
@@ -131,7 +144,7 @@ class UpisIstrazivanje : AppCompatActivity() {
                         opcije3.add(grupa.naziv)
                     }
                     arrayAdapter2 = ArrayAdapter(
-                        getApplicationContext(),
+                        view.context,
                         android.R.layout.simple_spinner_dropdown_item,
                         opcije3
                     )
@@ -142,7 +155,7 @@ class UpisIstrazivanje : AppCompatActivity() {
                 } else {
                     val opcije3 = ArrayList<String>()
                     arrayAdapter2 = ArrayAdapter(
-                        getApplicationContext(),
+                        view.context,
                         android.R.layout.simple_spinner_dropdown_item,
                         opcije3
                     )
@@ -156,6 +169,7 @@ class UpisIstrazivanje : AppCompatActivity() {
             override fun onNothingSelected(p0: AdapterView<*>?) {
 
             }
+
 
 
         }
@@ -182,18 +196,19 @@ class UpisIstrazivanje : AppCompatActivity() {
 
 
         }
-
-
-       dodajIstrazivanjeDugme.setOnClickListener{
+        dodajIstrazivanjeDugme.setOnClickListener{
             val nazivIstrazivanja : String = odabirIstrazivanja.getSelectedItem().toString()
             val nazivGrupe : String = odabirGrupa.getSelectedItem().toString()
             val godinaIstrazivanja : String = odabirGodina.getSelectedItem().toString()
-            val intentPovratak = Intent(this,MainActivity::class.java)
-            intentPovratak .putExtra("godina",godinaIstrazivanja)
-            intentPovratak .putExtra("istrazivanje",nazivIstrazivanja)
-            intentPovratak.putExtra("grupa",nazivGrupe)
             MojaIstrazivanja.dodajUMojaIstrazivanja(Istrazivanje(nazivIstrazivanja,godinaIstrazivanja.toInt()))
-            startActivity(intentPovratak)
+            MainActivity.brojOdgovorenih=0
+            (activity as MainActivity).proslijediUMain(nazivIstrazivanja,nazivGrupe)
         }
+            return view
     }
+
+
+
+
+
 }

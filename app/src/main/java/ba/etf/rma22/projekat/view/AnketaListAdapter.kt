@@ -4,6 +4,7 @@ import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -11,10 +12,13 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import ba.etf.rma22.projekat.R
 import ba.etf.rma22.projekat.data.models.Anketa
+import ba.etf.rma22.projekat.data.models.Pitanje
+import ba.etf.rma22.projekat.data.models.PitanjeAnketa
 import java.text.SimpleDateFormat
 import java.util.*
 
-class AnketaListAdapter (private var ankete : List<Anketa>):
+class AnketaListAdapter (private var ankete : List<Anketa>,
+                         private val onItemClicked:(anketa : Anketa)->Unit):
     RecyclerView.Adapter<AnketaListAdapter.AnketaViewHolder>() {
     //definisemo elemente svakog elementa liste
     inner class AnketaViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -23,6 +27,9 @@ class AnketaListAdapter (private var ankete : List<Anketa>):
         val nazivIstrazivanja: TextView = view.findViewById(R.id.nazivIstrazivanja)
         val progresZavrsetka: ProgressBar = view.findViewById(R.id.progresZavrsetka)
         val datumAnkete: TextView = view.findViewById(R.id.datumAnkete)
+
+
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AnketaViewHolder {
@@ -93,6 +100,16 @@ class AnketaListAdapter (private var ankete : List<Anketa>):
             holder.datumAnkete.text = "Vrijeme zatvaranja: " + sdformat.format(datumKraja)
         }else {
             holder.datumAnkete.text = "Vrijeme aktiviranja: "+sdformat.format(datumPocetka)}
+
+
+
+        holder.itemView.setOnClickListener {
+            onItemClicked(ankete[position])
+        }
+
+
+
+
     }
     override fun getItemCount(): Int = ankete.size
 
@@ -116,9 +133,8 @@ class AnketaListAdapter (private var ankete : List<Anketa>):
             }
             return 0
 
-    }
+        }
     }
 
-    
 
 }
