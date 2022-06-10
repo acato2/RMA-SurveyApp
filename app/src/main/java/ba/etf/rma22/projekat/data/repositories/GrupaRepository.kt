@@ -1,17 +1,24 @@
 package ba.etf.rma22.projekat.data.repositories
 
-import ba.etf.rma22.projekat.data.allGroups
+
 import ba.etf.rma22.projekat.data.models.Grupa
+import ba.etf.rma22.projekat.data.models.Istrazivanje
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 object GrupaRepository {
-   fun getGroupsByIstrazivanje(nazivIstrazivanja : String):List<Grupa>{
-       val grupe = ArrayList<Grupa>()
-       for(grupa in allGroups()){
-           if(nazivIstrazivanja.equals(grupa.nazivIstrazivanja)){
-               grupe.add(grupa)
+   suspend fun getGroupsByIstrazivanje(nazivIstrazivanja : String):List<Grupa>{
+       return withContext(Dispatchers.IO){
+           var svaIstrazivanja = ApiAdapter.retrofit.getIstrazivanja(1)
+           var idIstrazivanja : Int = 0
+           for(istrazivanje in svaIstrazivanja){
+               if(istrazivanje.naziv.equals(nazivIstrazivanja)){
+                   idIstrazivanja=istrazivanje.id
+               }
            }
+           var response = ApiAdapter.retrofit.getGrupeZaIstrazivanje(idIstrazivanja)
+           return@withContext response
        }
-        return grupe
    }
 
 }

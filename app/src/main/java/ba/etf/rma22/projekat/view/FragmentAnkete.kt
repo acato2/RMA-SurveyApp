@@ -11,14 +11,18 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
+import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ba.etf.rma22.projekat.MainActivity
 import ba.etf.rma22.projekat.R
 import ba.etf.rma22.projekat.data.models.Anketa
-import ba.etf.rma22.projekat.data.models.PitanjeAnketa
+import ba.etf.rma22.projekat.data.repositories.AnketaRepository
 import ba.etf.rma22.projekat.viewmodel.AnketaListViewModel
-import java.util.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.collections.ArrayList
 
 
@@ -41,13 +45,12 @@ class FragmentAnkete : Fragment() {
             activity,2
         )
         anketaListAdapter = AnketaListAdapter(listOf()) { anketa ->
-            otvoriFragmentIProslijediPodatke(anketa.naziv, anketa.nazivIstrazivanja)
+            anketa.nazivIstrazivanja?.let {prikaziAnketu(anketa) }
         }
+
+
+
         ankete.adapter = anketaListAdapter
-        anketaListAdapter.updateAnkete(anketeListViewModel.getAll())
-
-
-
 
 
         spinner = view.findViewById(R.id.filterAnketa)
@@ -74,32 +77,30 @@ class FragmentAnkete : Fragment() {
             ) {
                 val odabranaOpcija = parent.getItemAtPosition(position).toString()
                 if (odabranaOpcija.equals("Sve moje ankete")) {
-                    val calender = Calendar.getInstance()
-                    val year = calender.get(Calendar.YEAR)-1900  // jer koristimo date klasu moramo godinu oduzet od 1900
-                    val month = calender.get(Calendar.MONTH)
-                    val day = calender.get(Calendar.DAY_OF_MONTH)
-                    val currentDate : Date = Date(year,month,day)
-                    val mojeAnkete = ArrayList<Anketa>()
-                    for(anketa in anketeListViewModel.getMyAnkete()){
-                        if(anketa.datumRada!=currentDate ){
-                            mojeAnkete.add(anketa)
-                        }
-
-                    }
-                    anketaListAdapter.updateAnkete(mojeAnkete)
-                    anketaListAdapter.notifyDataSetChanged()
+                    anketeListViewModel.getMyAnkete(
+                        onSuccess = ::onSuccess,
+                        onError = ::onError
+                    )
                 } else if (odabranaOpcija.equals("Sve ankete")) {
-                    anketaListAdapter.updateAnkete(anketeListViewModel.getAll())
-                    anketaListAdapter.notifyDataSetChanged()
+                    anketeListViewModel.getAll(
+                        onSuccess = ::onSuccess,
+                        onError = ::onError
+                    )
                 } else if (odabranaOpcija.equals("Urađene ankete")) {
-                    anketaListAdapter.updateAnkete(anketeListViewModel.getDone())
-                    anketaListAdapter.notifyDataSetChanged()
+                    anketeListViewModel.getDone(
+                        onSuccess = ::onSuccess,
+                        onError = ::onError
+                    )
                 } else if (odabranaOpcija.equals("Buduće ankete")) {
-                    anketaListAdapter.updateAnkete(anketeListViewModel.getFuture())
-                    anketaListAdapter.notifyDataSetChanged()
+                    anketeListViewModel.getFuture(
+                        onSuccess = ::onSuccess,
+                        onError = ::onError
+                    )
                 } else if (odabranaOpcija.equals("Prošle ankete")) {
-                    anketaListAdapter.updateAnkete(anketeListViewModel.getNotTaken())
-                    anketaListAdapter.notifyDataSetChanged()
+                   anketeListViewModel.getNotTaken(
+                        onSuccess = ::onSuccess,
+                        onError = ::onError
+                    )
                 }
             }
 
@@ -108,21 +109,35 @@ class FragmentAnkete : Fragment() {
             }
         }
 
+
         return view
 
     }
 
-    private fun otvoriFragmentIProslijediPodatke(nazivAnkete : String,nazivIstrazivanja : String){
-        PitanjeAnketa.anketaNaziv=nazivAnkete
-        PitanjeAnketa.istrazivanjeNaziv=nazivIstrazivanja
-        if(spinner.selectedItem.equals("Sve moje ankete") || spinner.selectedItem.equals("Urađene ankete")) {
-           if(spinner.selectedItem.equals("Urađene ankete")){
-                MainActivity.disableDugme=1 }
-
-                (activity as MainActivity).otvoriPitanja()
+    private fun prikaziAnketu(anketa : Anketa) {
+        if(!spinner.selectedItem.toString().equals("Sve ankete")){
+            AnketaRepository.pokrenutaAnketa=anketa
+            anketeListViewModel.getPoceteAnketeApp2(anketa,onSuccess = ::onSuccessPocni, onError = ::onError)
         }
 
+    }
 
+    private fun onSuccessPocni(rezultat: Boolean, anketa: Anketa) {
+        GlobalScope.launch (Dispatchers.IO) {
+            withContext(Dispatchers.Main) {
+                val toast = Toast.makeText(context, "Anketa zapoceta", Toast.LENGTH_SHORT)
+                toast.show()
+                (activity as MainActivity).otvoriPitanja()
+            }
+        }
+    }
+
+    fun onSuccess(ankete:List<Anketa>){
+        anketaListAdapter.updateAnkete(ankete)
+    }
+    fun onError() {
+        val toast = Toast.makeText(context, "Error", Toast.LENGTH_SHORT)
+        toast.show()
     }
 
 

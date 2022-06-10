@@ -4,7 +4,6 @@ import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -12,8 +11,7 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import ba.etf.rma22.projekat.R
 import ba.etf.rma22.projekat.data.models.Anketa
-import ba.etf.rma22.projekat.data.models.Pitanje
-import ba.etf.rma22.projekat.data.models.PitanjeAnketa
+import ba.etf.rma22.projekat.data.repositories.AnketaRepository
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -52,24 +50,24 @@ class AnketaListAdapter (private var ankete : List<Anketa>,
         val month = calender.get(Calendar.MONTH)
         val day = calender.get(Calendar.DAY_OF_MONTH)
         val currentDate : Date = Date(year,month,day)
-        val boja : String
-        if(datumRada==null && datumKraja.after(currentDate) && datumPocetka.before(currentDate)){ //aktivna ali nije uradjena
+        var boja : String
+        if(datumRada==null && datumPocetka.before(currentDate)){ //aktivna ali nije uradjena
             holder.statusAnkete.setImageResource(R.drawable.zelena)
             boja = "zelena"
 
         }
-        else if (datumPocetka.after(currentDate) && datumRada==null && datumKraja.after(currentDate)){ //nije aktivna nije uradjena
+        else if (datumPocetka.after(currentDate) && datumRada==null ) { //nije aktivna nije uradjena
             holder.statusAnkete.setImageResource(R.drawable.zuta)
             boja = "zuta"
 
         }
-        else if(datumKraja.before(currentDate) && datumRada==null ){ // anketa prosla i nije uradjena
+        else if(datumRada==null ){ // anketa prosla i nije uradjena
             holder.statusAnkete.setImageResource(R.drawable.crvena)
             boja = "crvena"
 
 
         }
-        else{
+        else {
             holder.statusAnkete.setImageResource(R.drawable.plava)
             boja = "plava"
 
@@ -84,7 +82,7 @@ class AnketaListAdapter (private var ankete : List<Anketa>,
         var x = ankete[position].progres
         var r = 0.2
         var progres = Math.round(x / r) * r
-        progres = progres * 100
+        progres *= 100
         holder.progresZavrsetka.setProgress(progres.toInt(), false)
 
         //datum
@@ -95,9 +93,19 @@ class AnketaListAdapter (private var ankete : List<Anketa>,
         if (boja.equals("plava")) {
             holder.datumAnkete.text = "Anketa urađena: " + sdformat.format(datumRada)
         } else if (boja.equals("zelena")) {
-            holder.datumAnkete.text = "Vrijeme zatvaranja: " + sdformat.format(datumKraja)
+            if(datumKraja==null){
+                holder.datumAnkete.text = "Vrijeme zatvaranja: null"
+            }
+            else{
+                holder.datumAnkete.text = "Vrijeme zatvaranja: " + sdformat.format(datumKraja)
+            }
         } else if (boja.equals("crvena")) {
-            holder.datumAnkete.text = "Vrijeme zatvaranja: " + sdformat.format(datumKraja)
+            if(datumKraja==null){
+                holder.datumAnkete.text = "Vrijeme zatvaranja: null"
+            }
+            else {
+                holder.datumAnkete.text = "Vrijeme zatvaranja: " + sdformat.format(datumKraja)
+            }
         }else {
             holder.datumAnkete.text = "Vrijeme aktiviranja: "+sdformat.format(datumPocetka)}
 

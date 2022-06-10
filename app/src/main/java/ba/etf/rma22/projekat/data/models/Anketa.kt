@@ -1,14 +1,26 @@
 package ba.etf.rma22.projekat.data.models
 
+import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 import java.util.*
 
 data class Anketa(
-    val naziv : String,
-    val nazivIstrazivanja : String,
-    val datumPocetak : Date,
-    val datumKraj : Date,
+    @SerializedName("id") var id : Int,
+    @SerializedName("naziv") val naziv : String,
+    var nazivIstrazivanja : String?,
+    @SerializedName("datumPocetak") val datumPocetak : Date,
+    @SerializedName("datumKraj") val datumKraj : Date,
     var datumRada : Date?,
-    val trajanje : Int,
-    val nazivGrupe : String,
+    @SerializedName("trajanje") val trajanje : Int,
+    var nazivGrupe : String?,
     var progres : Float
-)
+):Serializable{
+    override fun hashCode():Int{
+        return id.hashCode()
+    }
+    override fun equals(other:Any?):Boolean{
+        val anketa = other as Anketa
+        if(anketa.id == this.id)return true
+        return false
+    }
+}

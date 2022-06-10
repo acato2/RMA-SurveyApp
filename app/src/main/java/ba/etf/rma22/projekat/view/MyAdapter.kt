@@ -9,16 +9,21 @@ import android.widget.BaseAdapter
 import android.widget.TextView
 import ba.etf.rma22.projekat.MainActivity
 import ba.etf.rma22.projekat.R
-import ba.etf.rma22.projekat.data.models.ListaOdgovora
+import ba.etf.rma22.projekat.data.models.AnketaTaken
+import ba.etf.rma22.projekat.data.models.Odgovor
+import ba.etf.rma22.projekat.data.repositories.AnketaRepository
+import ba.etf.rma22.projekat.viewmodel.OdgovorViewModel
+import ba.etf.rma22.projekat.viewmodel.PitanjeAnketaViewModel
+import ba.etf.rma22.projekat.viewmodel.TakeAnketaViewModel
 
 
-class MyAdapter(private val context: Context, private val arrayList: java.util.ArrayList<String>,vecUradjene :String) : BaseAdapter() {
+class MyAdapter(private val context: Context, private val arrayList: java.util.ArrayList<String>,pitanjeId:Int) : BaseAdapter() {
     private lateinit var odgovor : TextView
-    private var mContext = context
-    private var vecUradjene = vecUradjene
-
-    var mcolor = Color.parseColor("#0000FF")
-
+    private var odgovorViewModel = OdgovorViewModel()
+    private var pitanjeAnketaViewModel = PitanjeAnketaViewModel()
+    private var pitanjeId = pitanjeId
+    private lateinit var odg : String
+    private var pozicijaOdg :Int = 0
 
     override fun getCount(): Int {
         return arrayList.size
@@ -38,25 +43,15 @@ class MyAdapter(private val context: Context, private val arrayList: java.util.A
         convertView.setOnClickListener(View.OnClickListener {
             convertView.isSelected=true
             val selected = (convertView.findViewById(R.id.idTextViewElementa) as TextView).text.toString()
-            ListaOdgovora.odgovori.add(selected)
-
-            if (mContext is MainActivity) {
-                (mContext as MainActivity).brojOdgovorenih()
-            }
-
+            pozicijaOdg=parent.indexOfChild(it)
+            odg=selected
+            AnketaRepository.anketaTaken?.id?.let { pitanjeAnketaViewModel.postaviOdgovorAnketa(it,pitanjeId,position) }
         })
-        for(odg in ListaOdgovora.odgovori) {
-            if (odgovor.getText().equals(odg)) {
-                odgovor.setTextColor(mcolor)
-            }
-        }
-        if(odgovor.getText().equals(vecUradjene)){
-            odgovor.setTextColor(mcolor)
-        }
-
 
         return convertView
     }
+
+
     override fun areAllItemsEnabled(): Boolean {
         return true
     }
