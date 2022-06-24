@@ -12,7 +12,7 @@ class OdgovorViewModel {
     fun postaviOdgovorAnketa(onSuccess: (progres : Int) -> Unit,
                              onError: () -> Unit,idAnketaTaken:Int, idPitanje:Int, odgovor:Int){
         scope.launch{
-           val result =  OdgovorRepository.postaviOdgovorAnketa(idAnketaTaken,idPitanje,odgovor)
+            val result =  OdgovorRepository.postaviOdgovorAnketa(idAnketaTaken,idPitanje,odgovor)
             when (result) {
                 is Int -> {
                     onSuccess.invoke(result)
@@ -20,7 +20,7 @@ class OdgovorViewModel {
                 else-> onError.invoke()
             }
         }
-        }
+    }
     fun getOdgovoriAnketa(onSuccess: (odgovori:List<Odgovor>) -> Unit,
                           onError: () -> Unit, idAnketa:Int){
         scope.launch{

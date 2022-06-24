@@ -3,12 +3,15 @@ package ba.etf.rma22.projekat
 
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import ba.etf.rma22.projekat.data.models.*
-import ba.etf.rma22.projekat.data.repositories.AnketaRepository
+import ba.etf.rma22.projekat.data.repositories.*
+
 import ba.etf.rma22.projekat.view.*
+import ba.etf.rma22.projekat.viewmodel.GrupaViewModel
 import ba.etf.rma22.projekat.viewmodel.PitanjeAnketaViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -32,6 +35,7 @@ class MainActivity : AppCompatActivity(){
     private lateinit var viewPager2 : ViewPager2
     private lateinit var viewPagerAdapter : ViewPagerAdapter
     private var pitanjeAnketaViewModel = PitanjeAnketaViewModel()
+    private var groupViewModel = GrupaViewModel()
 
 
 
@@ -78,9 +82,44 @@ class MainActivity : AppCompatActivity(){
 
             }
         })
+        //novo
+
+        AccountRepository.setContext(applicationContext)
+        AnketaRepository.setContext(applicationContext)
+        OdgovorRepository.setContext(applicationContext)
+        PitanjeAnketaRepository.setContext(applicationContext)
+        IstrazivanjeIGrupaRepository.setContext(applicationContext)
+        TakeAnketaRepository.setContext(applicationContext)
+
+
+        val payload = intent?.getStringExtra("payload")
+        if (payload != null) {
+            groupViewModel.changeHash(payload, onSuccess = ::onSuccess5, onError = ::onError)
+        }
+        else groupViewModel.changeHash("91fd5734-9146-42c3-a963-0394e0110762", onSuccess = ::onSuccess5, onError = ::onError)
 
 
     }
+
+    private fun onSuccess5() {
+        GlobalScope.launch(Dispatchers.IO){
+            withContext(Dispatchers.Main){
+                val toast = Toast.makeText(applicationContext, "Sve ok", Toast.LENGTH_SHORT)
+                toast.show()
+            }
+        }
+    }
+
+    fun onSuccess(uspjesno:Boolean){
+        val toast = Toast.makeText(applicationContext, "Spaseno", Toast.LENGTH_SHORT)
+        toast.show()
+    }
+    fun onError() {
+        val toast = Toast.makeText(applicationContext, "Error", Toast.LENGTH_SHORT)
+        toast.show()
+
+    }
+
 
 
 
@@ -129,9 +168,7 @@ class MainActivity : AppCompatActivity(){
 
     }
 
-    fun onError() {
 
-    }
 
     private fun onSuccessPitanja(pitanja: List<Pitanje>) {
         GlobalScope.launch (Dispatchers.IO) {
@@ -168,5 +205,15 @@ class MainActivity : AppCompatActivity(){
         viewPagerAdapter.refreshFragment(1,FragmentPoruka(poruka))
         viewPagerAdapter.refreshFragment(0,FragmentAnkete())
 
+    }
+
+
+    fun onSuccess2(){
+        GlobalScope.launch(Dispatchers.IO){
+            withContext(Dispatchers.Main){
+                val toast = Toast.makeText(applicationContext, "Sve ok", Toast.LENGTH_SHORT)
+                toast.show()
+            }
+        }
     }
 }

@@ -51,7 +51,7 @@ class AnketaListAdapter (private var ankete : List<Anketa>,
         val day = calender.get(Calendar.DAY_OF_MONTH)
         val currentDate : Date = Date(year,month,day)
         var boja : String
-        if(datumRada==null && datumPocetka.before(currentDate)){ //aktivna ali nije uradjena
+      /*  if(datumRada==null && datumPocetka.before(currentDate)){ //aktivna ali nije uradjena
             holder.statusAnkete.setImageResource(R.drawable.zelena)
             boja = "zelena"
 
@@ -60,10 +60,10 @@ class AnketaListAdapter (private var ankete : List<Anketa>,
             holder.statusAnkete.setImageResource(R.drawable.zuta)
             boja = "zuta"
 
-        }
-        else if(datumRada==null ){ // anketa prosla i nije uradjena
-            holder.statusAnkete.setImageResource(R.drawable.crvena)
-            boja = "crvena"
+        }*/
+        if(datumRada==null ){ // anketa prosla i nije uradjena
+            holder.statusAnkete.setImageResource(R.drawable.zelena)
+            boja = "zelena"
 
 
         }
@@ -81,33 +81,34 @@ class AnketaListAdapter (private var ankete : List<Anketa>,
         //progres
         var x = ankete[position].progres
         var r = 0.2
-        var progres = Math.round(x / r) * r
-        progres *= 100
-        holder.progresZavrsetka.setProgress(progres.toInt(), false)
+//        var progres = Math.round(x / r) * r
+        //progres *= 100
+        holder.progresZavrsetka.setProgress(10, false)
 
         //datum
 
 
-        val sdformat = SimpleDateFormat("dd.MM.YYYY")
+        //val sdformat = SimpleDateFormat("dd.MM.YYYY")
 
         if (boja.equals("plava")) {
-            holder.datumAnkete.text = "Anketa urađena: " + sdformat.format(datumRada)
+            holder.datumAnkete.text = "Anketa urađena: "
         } else if (boja.equals("zelena")) {
             if(datumKraja==null){
                 holder.datumAnkete.text = "Vrijeme zatvaranja: null"
             }
             else{
-                holder.datumAnkete.text = "Vrijeme zatvaranja: " + sdformat.format(datumKraja)
+                holder.datumAnkete.text = "Vrijeme zatvaranja: "
             }
         } else if (boja.equals("crvena")) {
             if(datumKraja==null){
                 holder.datumAnkete.text = "Vrijeme zatvaranja: null"
             }
             else {
-                holder.datumAnkete.text = "Vrijeme zatvaranja: " + sdformat.format(datumKraja)
+                holder.datumAnkete.text = "Vrijeme zatvaranja: "
             }
         }else {
-            holder.datumAnkete.text = "Vrijeme aktiviranja: "+sdformat.format(datumPocetka)}
+            holder.datumAnkete.text = "Vrijeme aktiviranja: "
+        }
 
 
 
@@ -122,12 +123,12 @@ class AnketaListAdapter (private var ankete : List<Anketa>,
     override fun getItemCount(): Int = ankete.size
 
     fun updateAnkete(ankete : List<Anketa>){
-        Collections.sort(ankete, SortByDate())  //sortiramo po datumu pocetka
+       // Collections.sort(ankete, SortByDate())  //sortiramo po datumu pocetka
         this.ankete=ankete
         notifyDataSetChanged()
 
     }
-    private class SortByDate : Comparator<Anketa> {
+   /* private class SortByDate : Comparator<Anketa> {
         override fun compare(
             anketa1: Anketa,
             anketa2: Anketa
@@ -141,8 +142,16 @@ class AnketaListAdapter (private var ankete : List<Anketa>,
             }
             return 0
 
-        }
-    }
+        }*/
+       /* fun stringToDate(date: String?) : Date{
+            var formatter = SimpleDateFormat("yyyy-mm-dd")
+            return formatter.parse(date)
+        }*/
+
+    /*fun stringToDate(date: String?) : Date{
+        var formatter = SimpleDateFormat("yyyy-mm-dd")
+        return formatter.parse(date)
+    }*/
 
 
 }

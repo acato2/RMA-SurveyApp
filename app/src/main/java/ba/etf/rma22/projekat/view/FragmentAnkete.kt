@@ -19,6 +19,7 @@ import ba.etf.rma22.projekat.R
 import ba.etf.rma22.projekat.data.models.Anketa
 import ba.etf.rma22.projekat.data.repositories.AnketaRepository
 import ba.etf.rma22.projekat.viewmodel.AnketaListViewModel
+import ba.etf.rma22.projekat.viewmodel.GrupaViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -66,7 +67,7 @@ class FragmentAnkete : Fragment() {
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner.adapter = arrayAdapter
         //selekcija
-        spinner.setSelection(0);
+        spinner.setSelection(1);
 
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(

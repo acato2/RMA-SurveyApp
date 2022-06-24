@@ -15,7 +15,7 @@ object IstrazivanjeRepository {
     suspend fun getUpisanaIstrazivanja(istrazivanjaId:List<Int>):List<Istrazivanje>{
         return withContext(Dispatchers.IO) {
             val istrazivanja = IstrazivanjeIGrupaRepository.getIstrazivanja(1)
-            return@withContext istrazivanja
+            return@withContext istrazivanja!!
         }
 
     }

@@ -72,7 +72,7 @@ interface Api {
     @POST("grupa/{gid}/student/{id}")
     suspend fun upisiUGrupu(
         @Path("gid") idGrupa:Int,
-        @Path("id") id:String
+        @Path("id") id:String = "91fd5734-9146-42c3-a963-0394e0110762"
     ): Message
 
     @GET("student/{id}/grupa")
@@ -96,6 +96,11 @@ interface Api {
     suspend fun getIstrazivanjaByGodina(
         @Query("offset") offset:Int
     ): List<Istrazivanje>
+
+    @GET("student/{id}")
+    suspend fun getAcc(@Path("id") id: String): Account
+
+
 
 
 

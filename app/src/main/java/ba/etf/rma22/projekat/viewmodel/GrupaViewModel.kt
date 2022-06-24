@@ -2,13 +2,10 @@ package ba.etf.rma22.projekat.viewmodel
 
 
 import ba.etf.rma22.projekat.data.models.Grupa
-import ba.etf.rma22.projekat.data.models.Istrazivanje
+import ba.etf.rma22.projekat.data.repositories.AccountRepository
 import ba.etf.rma22.projekat.data.repositories.GrupaRepository
 import ba.etf.rma22.projekat.data.repositories.IstrazivanjeIGrupaRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class GrupaViewModel {
     val scope = CoroutineScope(Job() + Dispatchers.Main)
@@ -33,4 +30,19 @@ class GrupaViewModel {
             }
         }
     }
+
+    fun changeHash(hash: String,
+                      onSuccess: () -> Unit,
+                      onError: () -> Unit
+    ){
+        GlobalScope.launch{
+            val accUpisan = AccountRepository.postaviHash(hash)
+            when(accUpisan){
+                is Boolean-> onSuccess?.invoke()
+                else -> onError?.invoke()
+            }
+        }
+    }
+
+
 }

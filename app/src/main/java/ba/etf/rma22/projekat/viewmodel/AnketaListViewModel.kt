@@ -63,7 +63,7 @@ class AnketaListViewModel {
             }
         }
     }
-   fun getNotTaken(onSuccess: (ankete: List<Anketa>) -> Unit,
+    fun getNotTaken(onSuccess: (ankete: List<Anketa>) -> Unit,
                     onError: () -> Unit){
         scope.launch{
             val result =AnketaRepository.getNotTaken()
